@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "fast-api-dunossauro"
+version = "0.1.0"
+description = "Repositório de acompanhamento do curso FastAPI do Zero do Dunossauro"
+authors = ["Bruno Pinheiro <93209918+brunoopinheiro@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.12.*"
+fastapi = "^0.115.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
