@@ -38,7 +38,7 @@ quote-style = 'single'
 [tool.taskipy.tasks]
 run = 'fastapi dev fast_api_dunossauro/app.py'
 pre_test = 'task format'
-test = 'pytest --cov=fast_api_dunossauro tests/ -vv'
+test = 'pytest --cov=fast_api_dunossauro tests/ -vv --cov-report=term-missing'
 post_test = 'coverage html'
 lint = 'ruff check . && ruff check . --diff'
 format = 'ruff check . --fix && ruff format .'
