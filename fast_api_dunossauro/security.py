@@ -12,14 +12,11 @@ from sqlalchemy.orm import Session
 
 from fast_api_dunossauro.database import get_session
 from fast_api_dunossauro.models import User
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
+from fast_api_dunossauro.settings import Settings
 
 pwd_context = PasswordHash.recommended()
-
-SECRET_KEY = 'your_secret_key'
-ALGORITHM = 'HS256'
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/token')
+settings = Settings()
 
 
 def get_password_hash(password: str) -> str:
@@ -33,11 +30,15 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 def create_access_token(data: dict):
     to_encode = data.copy()
     expire = datetime.now(tz=ZoneInfo('UTC')) + timedelta(
-        minutes=ACCESS_TOKEN_EXPIRE_MINUTES,
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
     )
 
     to_encode.update({'exp': expire})
-    encoded_jwt = encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = encode(
+        to_encode,
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM,
+    )
 
     return encoded_jwt
 
@@ -52,7 +53,9 @@ def get_current_user(
         headers={'WWW-Authenticate': 'Bearer'},
     )
     try:
-        payload = decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = decode(
+            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+        )
         email: str = payload.get('sub')
 
         if not email:

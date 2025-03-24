@@ -2,11 +2,10 @@ from http import HTTPStatus
 
 from jwt import decode
 
-from fast_api_dunossauro.security import (
-    ALGORITHM,
-    SECRET_KEY,
-    create_access_token,
-)
+from fast_api_dunossauro.security import create_access_token
+from fast_api_dunossauro.settings import Settings
+
+settings = Settings()
 
 
 def test_jwt_creation():
@@ -14,7 +13,11 @@ def test_jwt_creation():
 
     result = create_access_token(data)
 
-    decoded_result = decode(result, SECRET_KEY, algorithms=[ALGORITHM])
+    decoded_result = decode(
+        result,
+        settings.SECRET_KEY,
+        algorithms=[settings.ALGORITHM],
+    )
 
     assert decoded_result['sub'] == data['sub']
     assert decoded_result['exp'] is not None
